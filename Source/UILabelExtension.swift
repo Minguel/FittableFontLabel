@@ -48,7 +48,7 @@ extension UILabel {
      - parameter minFontScale: The min font scale that the font will have
      - parameter rectSize:     Rect size where the label must fit
      */
-    public func fontSizeThatFits(text string: String, maxFontSize: CGFloat = 100, minFontScale: CGFloat = 0.1, rectSize: CGSize? = nil) -> CGFloat {
+    public func fontSizeThatFits(text string: String, maxFontSize: CGFloat = 100, minFontScale: CGFloat = 0.1, rectSize: CGSize? = nil, lineSpacingMultiplier: CGFloat = 0) -> CGFloat {
         let maxFontSize = maxFontSize.isNaN ? 100 : maxFontSize
         let minFontScale = minFontScale.isNaN ? 0.1 : minFontScale
         let minimumFontSize = maxFontSize * minFontScale
@@ -60,7 +60,7 @@ extension UILabel {
         let constraintSize = numberOfLines == 1 ?
             CGSize(width: CGFloat.greatestFiniteMagnitude, height: rectSize.height) :
             CGSize(width: rectSize.width, height: CGFloat.greatestFiniteMagnitude)
-        let calculatedFontSize = binarySearch(string: string, minSize: minimumFontSize, maxSize: maxFontSize, size: rectSize, constraintSize: constraintSize)
+        let calculatedFontSize = binarySearch(string: string, minSize: minimumFontSize, maxSize: maxFontSize, size: rectSize, constraintSize: constraintSize, lineSpacingMultiplier: lineSpacingMultiplier)
         return (calculatedFontSize * 10.0).rounded(.down) / 10.0
     }
 
@@ -88,7 +88,7 @@ extension UILabel {
         case fit, tooBig, tooSmall
     }
 
-    private func binarySearch(string: String, minSize: CGFloat, maxSize: CGFloat, size: CGSize, constraintSize: CGSize, lineSpacingMultiplier: CGFloat = 0) -> CGFloat {
+    private func binarySearch(string: String, minSize: CGFloat, maxSize: CGFloat, size: CGSize, constraintSize: CGSize, lineSpacingMultiplier: CGFloat) -> CGFloat {
         let fontSize = (minSize + maxSize) / 2
         var attributes = currentAttributedStringAttributes()
         let tempFont = font.withSize(fontSize)
