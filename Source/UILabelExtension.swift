@@ -88,11 +88,17 @@ extension UILabel {
         case fit, tooBig, tooSmall
     }
 
-    private func binarySearch(string: String, minSize: CGFloat, maxSize: CGFloat, size: CGSize, constraintSize: CGSize) -> CGFloat {
+    private func binarySearch(string: String, minSize: CGFloat, maxSize: CGFloat, size: CGSize, constraintSize: CGSize, lineSpacingMultiplier: CGFloat = 0) -> CGFloat {
         let fontSize = (minSize + maxSize) / 2
         var attributes = currentAttributedStringAttributes()
-        attributes[NSAttributedString.Key.font] = font.withSize(fontSize)
+        let tempFont = font.withSize(fontSize)
+        attributes[NSAttributedString.Key.font] = tempFont
 
+        if let paragraphStyle = (attributes[.paragraphStyle] as? NSMutableParagraphStyle) {
+            paragraphStyle.lineSpacing = tempFont.lineHeight * lineSpacingMultiplier
+            attributes[.paragraphStyle] = paragraphStyle
+        }
+        
         let rect = string.boundingRect(with: constraintSize, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
         let state = numberOfLines == 1 ? singleLineSizeState(rect: rect, size: size) : multiLineSizeState(rect: rect, size: size)
 
@@ -110,8 +116,8 @@ extension UILabel {
 
         switch state {
         case .fit: return fontSize
-        case .tooBig: return binarySearch(string: string, minSize: minSize, maxSize: fontSize, size: size, constraintSize: constraintSize)
-        case .tooSmall: return binarySearch(string: string, minSize: fontSize, maxSize: maxSize, size: size, constraintSize: constraintSize)
+        case .tooBig: return binarySearch(string: string, minSize: minSize, maxSize: fontSize, size: size, constraintSize: constraintSize, lineSpacingMultiplier: lineSpacingMultiplier)
+        case .tooSmall: return binarySearch(string: string, minSize: fontSize, maxSize: maxSize, size: size, constraintSize: constraintSize, lineSpacingMultiplier: lineSpacingMultiplier)
         }
     }
 
