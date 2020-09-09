@@ -95,7 +95,7 @@ extension UILabel {
         attributes[NSAttributedString.Key.font] = tempFont
 
         if let paragraphStyle = (attributes[.paragraphStyle] as? NSMutableParagraphStyle) {
-            paragraphStyle.lineSpacing = tempFont.lineHeight * lineSpacingMultiplier
+            paragraphStyle.lineSpacing = (tempFont.lineHeight * lineSpacingMultiplier).rounded(.down)
             attributes[.paragraphStyle] = paragraphStyle
         }
         
@@ -133,7 +133,7 @@ extension UILabel {
 
     private func multiLineSizeState(rect: CGRect, size: CGSize) -> FontSizeState {
         // if rect within 10 of size
-        if rect.height < size.height + 10 &&
+        if rect.height < size.height &&
            rect.height > size.height - 10 &&
            rect.width > size.width + 10 &&
            rect.width < size.width - 10 {
