@@ -135,8 +135,8 @@ extension UILabel {
         // if rect within 10 of size
         if rect.height < size.height &&
            rect.height > size.height - 10 &&
-           rect.width > size.width + 10 &&
-           rect.width < size.width - 10 {
+           rect.width < size.width &&
+           rect.width > size.width - 10 {
             return .fit
         } else if rect.height > size.height || rect.width > size.width {
             return .tooBig
